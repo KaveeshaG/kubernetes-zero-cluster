@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello SLIIT - Kubernetes Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 40px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #718096;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .info-card h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-label {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .info-value {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.2em;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            color: #718096;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        .k8s-badge {
+            display: inline-block;
+            background: #326CE5;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin: 10px 5px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #48bb78;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .container {
+                padding: 40px 20px;
+            }
+            
+            .info-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎓</div>
+        
+        <h1>Hello SLIIT! 👋</h1>
+        
+        <p class="subtitle">
+            Welcome to the Kubernetes Demo Application<br>
+            <strong>Sri Lanka Institute of Information Technology</strong>
+        </p>
+
+        <div class="info-card">
+            <h2>
+                <span class="status-indicator"></span>
+                Application Info
+            </h2>
+            <div class="info-item">
+                <span class="info-label">Pod Hostname:</span>
+                <span class="info-value" id="hostname">Loading...</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Timestamp:</span>
+                <span class="info-value" id="timestamp">Loading...</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Version:</span>
+                <span class="info-value" id="version">Loading...</span>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🐳</div>
+                <div class="feature-title">Containerized</div>
+                <div class="feature-desc">Running in a Docker container</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">☸️</div>
+                <div class="feature-title">Kubernetes</div>
+                <div class="feature-desc">Orchestrated by K8s</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🚀</div>
+                <div class="feature-title">Scalable</div>
+                <div class="feature-desc">Easy to scale up or down</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔄</div>
+                <div class="feature-title">Auto-healing</div>
+                <div class="feature-desc">Self-recovery enabled</div>
+            </div>
+        </div>
+
+        <button class="btn" onclick="refreshInfo()">🔄 Refresh Info</button>
+        <button class="btn" onclick="testLoadBalancing()">🎯 Test Load Balancing</button>
+
+        <div class="footer">
+            <div class="k8s-badge">Powered by Kubernetes</div>
+            <div class="k8s-badge">Node.js + Express</div>
+            <div class="k8s-badge">Docker</div>
+            <p style="margin-top: 20px;">
+                🎓 <strong>Kubernetes Sri Lanka | KCD Sri Lanka</strong><br>
+                Hello Kubernetes! - Zero to Cluster
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Fetch application info from API
+        async function fetchInfo() {
+            try {
+                const response = await fetch('/api/info');
+                const data = await response.json();
+                
+                document.getElementById('hostname').textContent = data.hostname;
+                document.getElementById('timestamp').textContent = new Date(data.timestamp).toLocaleString();
+                document.getElementById('version').textContent = data.version;
+            } catch (error) {
+                console.error('Error fetching info:', error);
+                document.getElementById('hostname').textContent = 'Error loading';
+                document.getElementById('timestamp').textContent = 'Error loading';
+                document.getElementById('version').textContent = 'Error loading';
+            }
+        }
+
+        // Refresh info
+        function refreshInfo() {
+            fetchInfo();
+            // Add a little animation feedback
+            const btn = event.target;
+            btn.textContent = '⏳ Refreshing...';
+            setTimeout(() => {
+                btn.textContent = '🔄 Refresh Info';
+            }, 500);
+        }
+
+        // Test load balancing by refreshing multiple times
+        function testLoadBalancing() {
+            let count = 0;
+            const interval = setInterval(() => {
+                fetchInfo();
+                count++;
+                event.target.textContent = `🎯 Testing... (${count}/5)`;
+                
+                if (count >= 5) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        event.target.textContent = '🎯 Test Load Balancing';
+                    }, 1000);
+                }
+            }, 500);
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(fetchInfo, 30000);
+
+        // Load info on page load
+        fetchInfo();
+    </script>
+</body>
+</html>
