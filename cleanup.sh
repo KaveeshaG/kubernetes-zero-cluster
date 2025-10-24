@@ -37,6 +37,7 @@ fi
 
 print_status "Deleting Kubernetes resources..."
 kubectl delete -f kubernetes/deployment.yaml --ignore-not-found=true
+kubectl delete -f kubernetes/service.yaml --ignore-not-found=true
 
 print_status "Checking for LoadBalancer service..."
 kubectl delete -f kubernetes/service-loadbalancer.yaml --ignore-not-found=true 2>/dev/null || true
