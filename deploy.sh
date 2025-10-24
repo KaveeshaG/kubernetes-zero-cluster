@@ -71,6 +71,8 @@ print_success "Docker image built successfully"
 # Deploy to Kubernetes
 print_status "Deploying to Kubernetes..."
 kubectl apply -f kubernetes/deployment.yaml
+kubectl apply -f kubernetes/service.yaml
+kubectl apply -f kubernetes/service-loadbalancer.yaml
 
 # Wait for deployment
 print_status "Waiting for pods to be ready..."
