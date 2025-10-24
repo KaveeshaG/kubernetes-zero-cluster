@@ -140,19 +140,19 @@ kubectl get services
 eval $(minikube docker-env)
 
 # Build image
-docker build -t hello-sliit:latest .
+docker build -t kubernetes-zero-cluster:v1 .
 
 # Verify
-docker images | grep hello-sliit
+docker images | grep kubernetes-zero-cluster
 ```
 
 **For K3s:**
 ```bash
 # Build image
-docker build -t hello-sliit:latest .
+docker build -t kubernetes-zero-cluster:v1 .
 
 # Save and load into K3s
-docker save hello-sliit:latest | sudo k3s ctr images import -
+docker save kubernetes-zero-cluster:v1 | sudo k3s ctr images import -
 ```
 
 #### Step 2: Deploy to Kubernetes
@@ -162,23 +162,23 @@ docker save hello-sliit:latest | sudo k3s ctr images import -
 kubectl apply -f kubernetes/deployment.yaml
 
 # Wait for pods to be ready
-kubectl wait --for=condition=ready pod -l app=hello-sliit --timeout=60s
+kubectl wait --for=condition=ready pod -l app=kubernetes-zero-cluster --timeout=60s
 ```
 
 #### Step 3: Verify Deployment
 
 ```bash
 # Check all resources
-kubectl get all -l app=hello-sliit
+kubectl get all -l app=kubernetes-zero-cluster
 
 # Check pod details
 kubectl get pods -o wide
 
 # Describe deployment
-kubectl describe deployment hello-sliit
+kubectl describe deployment kubernetes-zero-cluster
 
 # Check service
-kubectl describe service hello-sliit-service
+kubectl describe service kubernetes-zero-cluster-service
 ```
 
 ---
@@ -189,7 +189,7 @@ kubectl describe service hello-sliit-service
 
 ```bash
 # Get the NodePort
-kubectl get service hello-sliit-service
+kubectl get service kubernetes-zero-cluster-service
 
 # Get node IP
 kubectl get nodes -o wide
@@ -201,10 +201,10 @@ kubectl get nodes -o wide
 **For Minikube:**
 ```bash
 # Get the URL directly
-minikube service hello-sliit-service --url
+minikube service kubernetes-zero-cluster-service --url
 
 # Or open in browser
-minikube service hello-sliit-service
+minikube service kubernetes-zero-cluster-service
 ```
 
 **For K3s:**
@@ -222,7 +222,7 @@ kubectl get nodes -o wide
 kubectl apply -f kubernetes/service-loadbalancer.yaml
 
 # Wait for external IP (may take 1-2 minutes)
-kubectl get service hello-sliit-loadbalancer --watch
+kubectl get service kubernetes-zero-cluster-loadbalancer --watch
 
 # Access using external IP
 # http://<EXTERNAL_IP>
@@ -232,7 +232,7 @@ kubectl get service hello-sliit-loadbalancer --watch
 
 ```bash
 # Forward local port to service
-kubectl port-forward service/hello-sliit-service 8080:80
+kubectl port-forward service/kubernetes-zero-cluster-service 8080:80
 
 # Access at: http://localhost:8080
 ```
@@ -251,7 +251,7 @@ kubectl port-forward service/hello-sliit-service 8080:80
 
 ```bash
 # Get service URL
-SERVICE_URL=$(minikube service hello-sliit-service --url)  # For Minikube
+SERVICE_URL=$(minikube service kubernetes-zero-cluster-service --url)  # For Minikube
 # OR
 SERVICE_URL="http://<NODE_IP>:30100"  # For K3s
 
@@ -272,7 +272,7 @@ You should see different hostnames, showing load balancing across pods!
 
 ```bash
 # Scale to 5 replicas
-kubectl scale deployment hello-sliit --replicas=5
+kubectl scale deployment kubernetes-zero-cluster --replicas=5
 
 # Watch pods being created
 kubectl get pods -w
@@ -282,7 +282,7 @@ kubectl get pods -w
 
 ```bash
 # Scale to 2 replicas
-kubectl scale deployment hello-sliit --replicas=2
+kubectl scale deployment kubernetes-zero-cluster --replicas=2
 
 # Watch pods being terminated
 kubectl get pods -w
@@ -292,10 +292,10 @@ kubectl get pods -w
 
 ```bash
 # Enable metrics-server first (if not already)
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/v1/download/components.yaml
 
 # Create horizontal pod autoscaler
-kubectl autoscale deployment hello-sliit --cpu-percent=50 --min=2 --max=10
+kubectl autoscale deployment kubernetes-zero-cluster --cpu-percent=50 --min=2 --max=10
 
 # Check autoscaler status
 kubectl get hpa
@@ -318,40 +318,40 @@ kubectl get hpa
 
 ```bash
 # Build new version
-docker build -t hello-sliit:v2 .
+docker build -t kubernetes-zero-cluster:v2 .
 
 # For Minikube
 eval $(minikube docker-env)
-docker build -t hello-sliit:v2 .
+docker build -t kubernetes-zero-cluster:v2 .
 
 # For K3s
-docker save hello-sliit:v2 | sudo k3s ctr images import -
+docker save kubernetes-zero-cluster:v2 | sudo k3s ctr images import -
 ```
 
 #### Step 3: Update Deployment
 
 ```bash
 # Update image
-kubectl set image deployment/hello-sliit hello-sliit=hello-sliit:v2
+kubectl set image deployment/kubernetes-zero-cluster kubernetes-zero-cluster=kubernetes-zero-cluster:v2
 
 # Watch rollout
-kubectl rollout status deployment/hello-sliit
+kubectl rollout status deployment/kubernetes-zero-cluster
 
 # Check rollout history
-kubectl rollout history deployment/hello-sliit
+kubectl rollout history deployment/kubernetes-zero-cluster
 ```
 
 ### Rollback
 
 ```bash
 # Rollback to previous version
-kubectl rollout undo deployment/hello-sliit
+kubectl rollout undo deployment/kubernetes-zero-cluster
 
 # Rollback to specific revision
-kubectl rollout undo deployment/hello-sliit --to-revision=1
+kubectl rollout undo deployment/kubernetes-zero-cluster --to-revision=1
 
 # Check status
-kubectl rollout status deployment/hello-sliit
+kubectl rollout status deployment/kubernetes-zero-cluster
 ```
 
 ---
@@ -362,7 +362,7 @@ kubectl rollout status deployment/hello-sliit
 
 ```bash
 # Get all pod names
-kubectl get pods -l app=hello-sliit
+kubectl get pods -l app=kubernetes-zero-cluster
 
 # View logs from a specific pod
 kubectl logs <POD_NAME>
@@ -371,7 +371,7 @@ kubectl logs <POD_NAME>
 kubectl logs -f <POD_NAME>
 
 # View logs from all pods
-kubectl logs -l app=hello-sliit --all-containers=true
+kubectl logs -l app=kubernetes-zero-cluster --all-containers=true
 ```
 
 ### Execute Commands in Pod
@@ -399,13 +399,13 @@ kubectl get events -w
 
 ```bash
 # Describe deployment
-kubectl describe deployment hello-sliit
+kubectl describe deployment kubernetes-zero-cluster
 
 # Describe pod
 kubectl describe pod <POD_NAME>
 
 # Describe service
-kubectl describe service hello-sliit-service
+kubectl describe service kubernetes-zero-cluster-service
 ```
 
 ---
@@ -419,22 +419,22 @@ kubectl describe service hello-sliit-service
 kubectl delete -f kubernetes/deployment.yaml
 
 # Or delete individually
-kubectl delete deployment hello-sliit
-kubectl delete service hello-sliit-service
+kubectl delete deployment kubernetes-zero-cluster
+kubectl delete service kubernetes-zero-cluster-service
 
 # Verify deletion
-kubectl get all -l app=hello-sliit
+kubectl get all -l app=kubernetes-zero-cluster
 ```
 
 ### Remove Docker Image
 
 ```bash
 # Remove image
-docker rmi hello-sliit:latest
+docker rmi kubernetes-zero-cluster:v1
 
 # For Minikube
 eval $(minikube docker-env)
-docker rmi hello-sliit:latest
+docker rmi kubernetes-zero-cluster:v1
 ```
 
 ---
@@ -527,12 +527,12 @@ Intentionally break something and practice debugging
 **Solution for Minikube:**
 ```bash
 eval $(minikube docker-env)
-docker build -t hello-sliit:latest .
+docker build -t kubernetes-zero-cluster:v1 .
 ```
 
 **Solution for K3s:**
 ```bash
-docker save hello-sliit:latest | sudo k3s ctr images import -
+docker save kubernetes-zero-cluster:v1 | sudo k3s ctr images import -
 ```
 
 ### Issue 2: CrashLoopBackOff
@@ -555,7 +555,7 @@ kubectl describe pod <POD_NAME>
 **For Minikube:**
 ```bash
 # Use minikube service instead
-minikube service hello-sliit-service
+minikube service kubernetes-zero-cluster-service
 ```
 
 ---
@@ -564,28 +564,28 @@ minikube service hello-sliit-service
 
 ```bash
 # Build
-docker build -t hello-sliit:latest .
+docker build -t kubernetes-zero-cluster:v1 .
 
 # Deploy
 kubectl apply -f kubernetes/deployment.yaml
 
 # Status
-kubectl get all -l app=hello-sliit
+kubectl get all -l app=kubernetes-zero-cluster
 
 # Scale
-kubectl scale deployment hello-sliit --replicas=5
+kubectl scale deployment kubernetes-zero-cluster --replicas=5
 
 # Update
-kubectl set image deployment/hello-sliit hello-sliit=hello-sliit:v2
+kubectl set image deployment/kubernetes-zero-cluster kubernetes-zero-cluster=kubernetes-zero-cluster:v2
 
 # Rollback
-kubectl rollout undo deployment/hello-sliit
+kubectl rollout undo deployment/kubernetes-zero-cluster
 
 # Logs
-kubectl logs -l app=hello-sliit --all-containers=true -f
+kubectl logs -l app=kubernetes-zero-cluster --all-containers=true -f
 
 # Access (Minikube)
-minikube service hello-sliit-service
+minikube service kubernetes-zero-cluster-service
 
 # Delete
 kubectl delete -f kubernetes/deployment.yaml
